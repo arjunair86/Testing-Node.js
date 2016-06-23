@@ -18,7 +18,7 @@ router.route('/')
 		  res.sendFile(path.join(__dirname + '/route.html'));
 		})
 		.post(function(req, res){
-		  res.send("Requested user: " + req.body.user);
+		  res.json({user: req.body.user});
 		});
 
 router.post('/inside_route', function(req, res){
@@ -58,8 +58,8 @@ readStream.pipe(writeStream);
 
 
 app.get('/html', function(req, res){
-  res.sendFile(path.join(__dirname + '/output.txt'));
   res.header('Content-Type', 'text/html');
+  res.sendFile(path.join(__dirname + '/output.txt'));
 });
 
 
