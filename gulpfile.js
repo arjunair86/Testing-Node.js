@@ -24,5 +24,5 @@ gulp.task('compress', function() {
 });
  
 gulp.task('default', ['lint','beautify','compress'], function () {
-    // This will only run if the lint task is successful... 
+    // This will only run if the lint task is successful..
 });
