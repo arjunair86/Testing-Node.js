@@ -74,63 +74,15 @@ app.get('/html', function(req, res){
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/testdb');
 console.log('Connected to databse');
-var User = require('/home/user/intern_project/models/bear');
-var loginRouter = express.Router();
-var registerRouter = express.Router();
-var crypto = require('crypto');
-
 
 app.use('/users', function(req, res){
 	res.header('Content-Type', 'text/html');
 	res.sendFile(path.join(__dirname + '/View/users.html'));
 });
 
-loginRouter.route('/')
-	.get(function(req, res, next){
-		res.header('Content-Type', 'text/html');
-		res.sendFile(path.join(__dirname + '/View/login.html'));	
-	})
-	.post(function(req, res){
-		var passhash = crypto.createHmac('sha256', req.body.password).update('salt').digest('hex');
-		console.log('Password hashed');
-		User.findOne({'email': req.body.email}, 'encryp_pass name', function(err, user){
-			console.log('inside function');
-			if(err){
-				console.log(err);
-			}
-			if(user.encryp_pass === passhash)
-				res.send('Login Success '+ user.name);
-			else
-				res.send('Login Failed');
-		});
-});
 
-
-registerRouter.route('/')
-	.get(function(req, res){
-		res.sendFile(path.join(__dirname + '/View/register.html'));	
-	})
-	.post(function(req, res){
-		var passhash = crypto.createHmac('sha256', req.body.password).update('salt').digest('hex');
-		var user = new User();
-		console.log('created new instance');
-		user.name = req.body.name;
-		user.email = req.body.email;
-		user.encryp_pass = passhash;
-		console.log('assigned the variables');
-
-		//save it
-		user.save(function(err){
-			console.log('Entered save function');
-			if(err)
-				res.send(err);
-			res.send("User registered with email "+ req.body.email);
-		});
-});
-
-
-app.use('/login', loginRouter);
-app.use('/register', registerRouter)
+app.use('/login',  require('./routers/loginRouter'));
+app.use('/register',  require('./routers/registerRouter'))
 
 
 ////////**********************END**************************////////////////
